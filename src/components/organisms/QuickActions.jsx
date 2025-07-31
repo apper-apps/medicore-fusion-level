@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
 import QuickActionButton from "@/components/molecules/QuickActionButton";
 import ApperIcon from "@/components/ApperIcon";
@@ -7,7 +8,8 @@ import EmergencyAlertModal from "@/components/organisms/EmergencyAlertModal";
 import { toast } from "react-toastify";
 
 const QuickActions = () => {
-const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
 
   const handleNewPatient = () => {
@@ -29,8 +31,8 @@ const handleEmergencyAlert = () => {
     setIsEmergencyModalOpen(false);
   };
 
-  const handleStaffDirectory = () => {
-    toast.info("Staff Directory feature coming soon!");
+const handleStaffDirectory = () => {
+    navigate('/staff');
   };
 
   const actions = [
