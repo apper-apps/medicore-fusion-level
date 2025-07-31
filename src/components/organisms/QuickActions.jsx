@@ -3,10 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Car
 import QuickActionButton from "@/components/molecules/QuickActionButton";
 import ApperIcon from "@/components/ApperIcon";
 import PatientRegistrationModal from "@/components/organisms/PatientRegistrationModal";
+import EmergencyAlertModal from "@/components/organisms/EmergencyAlertModal";
 import { toast } from "react-toastify";
 
 const QuickActions = () => {
-  const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
+const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
+  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
 
   const handleNewPatient = () => {
     setIsPatientModalOpen(true);
@@ -18,8 +20,13 @@ const handlePatientRegistrationSuccess = (newPatient) => {
     // Could trigger a refresh of patient data in parent components if needed
   };
 
-  const handleEmergencyAlert = () => {
-    toast.error("Emergency Alert System activated!");
+const handleEmergencyAlert = () => {
+    setIsEmergencyModalOpen(true);
+  };
+
+  const handleEmergencyAlertSuccess = (alertData) => {
+    toast.success(`Emergency alert sent to ${alertData.recipients.length} recipient(s)`);
+    setIsEmergencyModalOpen(false);
   };
 
   const handleStaffDirectory = () => {
@@ -72,10 +79,15 @@ const handlePatientRegistrationSuccess = (newPatient) => {
           ))}
 </div>
       </CardContent>
-      <PatientRegistrationModal
+<PatientRegistrationModal
         isOpen={isPatientModalOpen}
         onClose={() => setIsPatientModalOpen(false)}
         onSuccess={handlePatientRegistrationSuccess}
+      />
+      <EmergencyAlertModal
+        isOpen={isEmergencyModalOpen}
+        onClose={() => setIsEmergencyModalOpen(false)}
+        onSuccess={handleEmergencyAlertSuccess}
       />
     </Card>
   );

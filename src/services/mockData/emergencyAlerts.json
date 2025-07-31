@@ -1,0 +1,62 @@
+[
+  {
+    "Id": 1,
+    "severity": "Critical",
+    "message": "Code Blue - Room 302. Immediate medical assistance required.",
+    "recipients": ["doctors", "nurses", "emergency_team"],
+    "timestamp": "2024-01-15T14:30:00.000Z",
+    "status": "Sent",
+    "sentBy": "Dr. Johnson",
+    "acknowledgedBy": ["Dr. Smith", "Nurse Williams"],
+    "createdAt": "2024-01-15T14:30:00.000Z",
+    "updatedAt": "2024-01-15T14:32:15.000Z"
+  },
+  {
+    "Id": 2,
+    "severity": "High",
+    "message": "Fire alarm activated on 3rd floor. Please evacuate patients and staff immediately.",
+    "recipients": ["all_staff", "security"],
+    "timestamp": "2024-01-15T09:15:00.000Z",
+    "status": "Sent",
+    "sentBy": "Security Team",
+    "acknowledgedBy": ["Dr. Brown", "Nurse Davis", "Admin Staff"],
+    "createdAt": "2024-01-15T09:15:00.000Z",
+    "updatedAt": "2024-01-15T09:18:45.000Z"
+  },
+  {
+    "Id": 3,
+    "severity": "Medium",
+    "message": "Equipment malfunction in OR-2. Please reschedule non-urgent surgeries.",
+    "recipients": ["doctors", "administration"],
+    "timestamp": "2024-01-14T16:45:00.000Z",
+    "status": "Sent",
+    "sentBy": "Maintenance Team",
+    "acknowledgedBy": ["Dr. Wilson", "Surgery Coordinator"],
+    "createdAt": "2024-01-14T16:45:00.000Z",
+    "updatedAt": "2024-01-14T16:47:30.000Z"
+  },
+  {
+    "Id": 4,
+    "severity": "High",
+    "message": "Multiple casualties arriving from traffic accident. Prepare trauma bay and alert all available staff.",
+    "recipients": ["doctors", "nurses", "emergency_team", "administration"],
+    "timestamp": "2024-01-14T11:20:00.000Z",
+    "status": "Sent",
+    "sentBy": "Emergency Coordinator",
+    "acknowledgedBy": ["Dr. Taylor", "Head Nurse", "Trauma Team"],
+    "createdAt": "2024-01-14T11:20:00.000Z",
+    "updatedAt": "2024-01-14T11:25:00.000Z"
+  },
+  {
+    "Id": 5,
+    "severity": "Critical",
+    "message": "Power outage in ICU wing. Backup generators activated. Monitor all critical patients closely.",
+    "recipients": ["all_staff", "security", "administration"],
+    "timestamp": "2024-01-13T22:10:00.000Z",
+    "status": "Sent",
+    "sentBy": "Facilities Manager",
+    "acknowledgedBy": ["Night Supervisor", "ICU Staff", "Maintenance"],
+    "createdAt": "2024-01-13T22:10:00.000Z",
+    "updatedAt": "2024-01-13T22:15:30.000Z"
+  }
+]
