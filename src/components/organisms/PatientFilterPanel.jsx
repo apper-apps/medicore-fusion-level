@@ -52,11 +52,25 @@ const PatientFilterPanel = ({
       </div>
 
       {/* Filter Content */}
-      <div className={cn(
+<div className={cn(
         "px-6 transition-all duration-300 ease-in-out",
         isExpanded ? "py-6 max-h-96" : "py-0 max-h-0 overflow-hidden"
       )}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          {/* Patient Name Search */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Patient Name
+            </label>
+            <Input
+              type="text"
+              placeholder="Search by name..."
+              value={filters.patientName || ""}
+              onChange={(e) => handleFilterChange("patientName", e.target.value)}
+              className="w-full"
+            />
+          </div>
+
           {/* Department Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -90,6 +104,19 @@ const PatientFilterPanel = ({
                 </option>
               ))}
             </select>
+          </div>
+
+          {/* Admission Date Search */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Admission Date
+            </label>
+            <Input
+              type="date"
+              value={filters.admissionDate || ""}
+              onChange={(e) => handleFilterChange("admissionDate", e.target.value)}
+              className="w-full"
+            />
           </div>
 
           {/* Date Range - From */}

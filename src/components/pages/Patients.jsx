@@ -19,11 +19,13 @@ const Patients = () => {
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filters, setFilters] = useState({
+const [filters, setFilters] = useState({
     department: "",
     status: "",
     dateFrom: "",
-    dateTo: ""
+    dateTo: "",
+    patientName: "",
+    admissionDate: ""
   });
 const loadPatients = async () => {
     try {
@@ -41,8 +43,15 @@ const loadPatients = async () => {
   };
 
   // Filter patients based on current filters
-  const applyFilters = () => {
+const applyFilters = () => {
     let filtered = [...patients];
+
+    // Patient name filter
+    if (filters.patientName) {
+      filtered = filtered.filter(patient =>
+        patient.Name?.toLowerCase().includes(filters.patientName.toLowerCase())
+      );
+    }
 
     // Department filter
     if (filters.department) {
@@ -77,6 +86,15 @@ const loadPatients = async () => {
       });
     }
 
+    // Admission date exact filter
+    if (filters.admissionDate) {
+      filtered = filtered.filter(patient => {
+        const patientAdmissionDate = new Date(patient.admissionDate);
+        const filterDate = new Date(filters.admissionDate);
+        return patientAdmissionDate.toDateString() === filterDate.toDateString();
+      });
+    }
+
     setFilteredPatients(filtered);
   };
 
@@ -95,12 +113,14 @@ const loadPatients = async () => {
     setFilters(newFilters);
   };
 
-  const handleClearFilters = () => {
+const handleClearFilters = () => {
     setFilters({
       department: "",
       status: "",
       dateFrom: "",
-      dateTo: ""
+      dateTo: "",
+      patientName: "",
+      admissionDate: ""
     });
   };
 
