@@ -1,51 +1,287 @@
-import patientsData from "@/services/mockData/patients.json";
+import { toast } from 'react-toastify';
 
-// Simulate API delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+// Initialize ApperClient
+const getApperClient = () => {
+  const { ApperClient } = window.ApperSDK;
+  return new ApperClient({
+    apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+    apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+  });
+};
+
+const TABLE_NAME = 'patient';
+
+// Define updateable fields based on schema
+const UPDATEABLE_FIELDS = [
+  'Name', 'Tags', 'Owner', 'age', 'roomNumber', 'attendingDoctor', 
+  'admissionStatus', 'admissionDate', 'condition', 'emergencyContact'
+];
 
 export const getPatients = async () => {
-  await delay(300);
-  return [...patientsData];
+  try {
+    const apperClient = getApperClient();
+    
+    const params = {
+      fields: [
+        { field: { Name: "Name" } },
+        { field: { Name: "Tags" } },
+        { field: { Name: "Owner" } },
+        { field: { Name: "CreatedOn" } },
+        { field: { Name: "CreatedBy" } },
+        { field: { Name: "ModifiedOn" } },
+        { field: { Name: "ModifiedBy" } },
+        { field: { Name: "age" } },
+        { field: { Name: "roomNumber" } },
+        { field: { Name: "attendingDoctor" } },
+        { field: { Name: "admissionStatus" } },
+        { field: { Name: "admissionDate" } },
+        { field: { Name: "condition" } },
+        { field: { Name: "emergencyContact" } }
+      ],
+      orderBy: [{ fieldName: "CreatedOn", sorttype: "DESC" }],
+      pagingInfo: { limit: 100, offset: 0 }
+    };
+    
+    const response = await apperClient.fetchRecords(TABLE_NAME, params);
+    
+    if (!response.success) {
+      console.error(response.message);
+      toast.error(response.message);
+      return [];
+    }
+    
+    if (!response.data || response.data.length === 0) {
+      return [];
+    }
+    
+    return response.data;
+  } catch (error) {
+    if (error?.response?.data?.message) {
+      console.error("Error fetching patients:", error?.response?.data?.message);
+    } else {
+      console.error(error.message);
+    }
+    return [];
+  }
 };
 
 export const getPatientById = async (id) => {
-  await delay(200);
-  const patient = patientsData.find(p => p.Id === parseInt(id));
-  if (!patient) {
-    throw new Error("Patient not found");
+  try {
+    const apperClient = getApperClient();
+    
+    const params = {
+      fields: [
+        { field: { Name: "Name" } },
+        { field: { Name: "Tags" } },
+        { field: { Name: "Owner" } },
+        { field: { Name: "CreatedOn" } },
+        { field: { Name: "CreatedBy" } },
+        { field: { Name: "ModifiedOn" } },
+        { field: { Name: "ModifiedBy" } },
+        { field: { Name: "age" } },
+        { field: { Name: "roomNumber" } },
+        { field: { Name: "attendingDoctor" } },
+        { field: { Name: "admissionStatus" } },
+        { field: { Name: "admissionDate" } },
+        { field: { Name: "condition" } },
+        { field: { Name: "emergencyContact" } }
+      ]
+    };
+    
+    const response = await apperClient.getRecordById(TABLE_NAME, parseInt(id), params);
+    
+    if (!response.success) {
+      console.error(response.message);
+      toast.error(response.message);
+      return null;
+    }
+    
+    return response.data;
+  } catch (error) {
+    if (error?.response?.data?.message) {
+      console.error(`Error fetching patient with ID ${id}:`, error?.response?.data?.message);
+    } else {
+      console.error(error.message);
+    }
+    return null;
   }
-  return { ...patient };
 };
 
 export const createPatient = async (patientData) => {
-  await delay(400);
-  const maxId = Math.max(...patientsData.map(p => p.Id));
-  const newPatient = {
-    ...patientData,
-    Id: maxId + 1,
-    admissionDate: new Date().toISOString()
-  };
-  patientsData.push(newPatient);
-  return { ...newPatient };
+  try {
+    const apperClient = getApperClient();
+    
+    // Filter to only include updateable fields and format data
+    const filteredData = {};
+    UPDATEABLE_FIELDS.forEach(field => {
+      if (patientData[field] !== undefined) {
+        let value = patientData[field];
+        
+        // Format data according to field types
+        if (field === 'age' && value) {
+          value = parseInt(value);
+        } else if (field === 'admissionDate' && value) {
+          value = new Date(value).toISOString();
+        } else if (field === 'Owner' && value) {
+          value = parseInt(value?.Id || value);
+        }
+        
+        filteredData[field] = value;
+      }
+    });
+    
+    const params = {
+      records: [filteredData]
+    };
+    
+    const response = await apperClient.createRecord(TABLE_NAME, params);
+    
+    if (!response.success) {
+      console.error(response.message);
+      toast.error(response.message);
+      return null;
+    }
+    
+    if (response.results) {
+      const successfulRecords = response.results.filter(result => result.success);
+      const failedRecords = response.results.filter(result => !result.success);
+      
+      if (failedRecords.length > 0) {
+        console.error(`Failed to create patient ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+        
+        failedRecords.forEach(record => {
+          record.errors?.forEach(error => {
+            toast.error(`${error.fieldLabel}: ${error.message}`);
+          });
+          if (record.message) toast.error(record.message);
+        });
+      }
+      
+      if (successfulRecords.length > 0) {
+        toast.success('Patient created successfully');
+        return successfulRecords[0].data;
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    if (error?.response?.data?.message) {
+      console.error("Error creating patient:", error?.response?.data?.message);
+    } else {
+      console.error(error.message);
+    }
+    return null;
+  }
 };
 
 export const updatePatient = async (id, updates) => {
-  await delay(350);
-  const index = patientsData.findIndex(p => p.Id === parseInt(id));
-  if (index === -1) {
-    throw new Error("Patient not found");
+  try {
+    const apperClient = getApperClient();
+    
+    // Filter to only include updateable fields and format data
+    const filteredData = { Id: parseInt(id) };
+    UPDATEABLE_FIELDS.forEach(field => {
+      if (updates[field] !== undefined) {
+        let value = updates[field];
+        
+        // Format data according to field types
+        if (field === 'age' && value) {
+          value = parseInt(value);
+        } else if (field === 'admissionDate' && value) {
+          value = new Date(value).toISOString();
+        } else if (field === 'Owner' && value) {
+          value = parseInt(value?.Id || value);
+        }
+        
+        filteredData[field] = value;
+      }
+    });
+    
+    const params = {
+      records: [filteredData]
+    };
+    
+    const response = await apperClient.updateRecord(TABLE_NAME, params);
+    
+    if (!response.success) {
+      console.error(response.message);
+      toast.error(response.message);
+      return null;
+    }
+    
+    if (response.results) {
+      const successfulUpdates = response.results.filter(result => result.success);
+      const failedUpdates = response.results.filter(result => !result.success);
+      
+      if (failedUpdates.length > 0) {
+        console.error(`Failed to update patient ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`);
+        
+        failedUpdates.forEach(record => {
+          record.errors?.forEach(error => {
+            toast.error(`${error.fieldLabel}: ${error.message}`);
+          });
+          if (record.message) toast.error(record.message);
+        });
+      }
+      
+      if (successfulUpdates.length > 0) {
+        toast.success('Patient updated successfully');
+        return successfulUpdates[0].data;
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    if (error?.response?.data?.message) {
+      console.error("Error updating patient:", error?.response?.data?.message);
+    } else {
+      console.error(error.message);
+    }
+    return null;
   }
-  patientsData[index] = { ...patientsData[index], ...updates };
-  return { ...patientsData[index] };
 };
 
 export const deletePatient = async (id) => {
-  await delay(250);
-  const index = patientsData.findIndex(p => p.Id === parseInt(id));
-  if (index === -1) {
-    throw new Error("Patient not found");
+  try {
+    const apperClient = getApperClient();
+    
+    const params = {
+      RecordIds: [parseInt(id)]
+    };
+    
+    const response = await apperClient.deleteRecord(TABLE_NAME, params);
+    
+    if (!response.success) {
+      console.error(response.message);
+      toast.error(response.message);
+      return false;
+    }
+    
+    if (response.results) {
+      const successfulDeletions = response.results.filter(result => result.success);
+      const failedDeletions = response.results.filter(result => !result.success);
+      
+      if (failedDeletions.length > 0) {
+        console.error(`Failed to delete patient ${failedDeletions.length} records:${JSON.stringify(failedDeletions)}`);
+        
+        failedDeletions.forEach(record => {
+          if (record.message) toast.error(record.message);
+        });
+      }
+      
+      if (successfulDeletions.length > 0) {
+        toast.success('Patient deleted successfully');
+        return true;
+      }
+    }
+    
+    return false;
+  } catch (error) {
+    if (error?.response?.data?.message) {
+      console.error("Error deleting patient:", error?.response?.data?.message);
+    } else {
+      console.error(error.message);
+    }
+    return false;
   }
-  const deletedPatient = { ...patientsData[index] };
-  patientsData.splice(index, 1);
-  return deletedPatient;
 };

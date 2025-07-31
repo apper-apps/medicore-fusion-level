@@ -37,11 +37,11 @@ const PatientTable = ({ patients, onPatientClick, isLoading }) => {
     }
   };
 
-  const filteredAndSortedPatients = patients
+const filteredAndSortedPatients = patients
     .filter(patient =>
-      patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      patient.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       patient.Id.toString().includes(searchQuery) ||
-      patient.attendingDoctor.toLowerCase().includes(searchQuery.toLowerCase())
+      patient.attendingDoctor?.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
       let aValue = a[sortField];
@@ -112,11 +112,11 @@ const PatientTable = ({ patients, onPatientClick, isLoading }) => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleSort("name")}
+onClick={() => handleSort("Name")}
                   className="font-medium text-gray-500 hover:text-gray-700"
                 >
                   Name
-                  <ApperIcon name={getSortIcon("name")} className="ml-1 h-4 w-4" />
+                  <ApperIcon name={getSortIcon("Name")} className="ml-1 h-4 w-4" />
                 </Button>
               </th>
               <th>
@@ -161,15 +161,15 @@ const PatientTable = ({ patients, onPatientClick, isLoading }) => {
                 onClick={() => onPatientClick(patient)}
                 className="hover:bg-gray-50 cursor-pointer transition-colors duration-200"
               >
-                <td className="font-medium text-primary-600">#{patient.Id}</td>
+<td className="font-medium text-primary-600">#{patient.Id}</td>
                 <td>
                   <div className="flex items-center space-x-3">
                     <div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center">
                       <span className="text-white font-medium text-sm">
-                        {patient.name.split(" ").map(n => n[0]).join("").toUpperCase()}
+                        {patient.Name?.split(" ").map(n => n[0]).join("").toUpperCase()}
                       </span>
                     </div>
-                    <span className="font-medium text-gray-900">{patient.name}</span>
+                    <span className="font-medium text-gray-900">{patient.Name}</span>
                   </div>
                 </td>
                 <td className="text-gray-600">{patient.roomNumber}</td>
