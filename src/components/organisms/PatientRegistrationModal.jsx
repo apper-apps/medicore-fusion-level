@@ -8,12 +8,13 @@ import { createActivity } from "@/services/api/activityService";
 import { toast } from "react-toastify";
 
 const PatientRegistrationModal = ({ isOpen, onClose, onSuccess }) => {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     name: "",
     age: "",
     roomNumber: "",
     attendingDoctor: "",
     admissionStatus: "stable",
+    admissionDate: "",
     condition: "",
     emergencyContact: ""
   });
@@ -27,7 +28,7 @@ const PatientRegistrationModal = ({ isOpen, onClose, onSuccess }) => {
     }
   };
 
-  const validateForm = () => {
+const validateForm = () => {
     const newErrors = {};
     
     if (!formData.name.trim()) newErrors.name = "Name is required";
@@ -36,6 +37,15 @@ const PatientRegistrationModal = ({ isOpen, onClose, onSuccess }) => {
     }
     if (!formData.roomNumber.trim()) newErrors.roomNumber = "Room number is required";
     if (!formData.attendingDoctor.trim()) newErrors.attendingDoctor = "Attending doctor is required";
+    if (!formData.admissionDate.trim()) {
+      newErrors.admissionDate = "Admission date is required";
+    } else {
+      const admissionDate = new Date(formData.admissionDate);
+      const now = new Date();
+      if (admissionDate > now) {
+        newErrors.admissionDate = "Admission date cannot be in the future";
+      }
+    }
     if (!formData.condition.trim()) newErrors.condition = "Condition is required";
     if (!formData.emergencyContact.trim()) newErrors.emergencyContact = "Emergency contact is required";
 
@@ -59,6 +69,7 @@ const patientData = {
         roomNumber: formData.roomNumber,
         attendingDoctor: formData.attendingDoctor,
         admissionStatus: formData.admissionStatus,
+        admissionDate: formData.admissionDate,
         condition: formData.condition,
         emergencyContact: formData.emergencyContact
       };
@@ -80,12 +91,13 @@ const patientData = {
       toast.success(`Patient ${newPatient.Name || formData.name} registered successfully!`);
       
       // Reset form
-      setFormData({
+setFormData({
         name: "",
         age: "",
         roomNumber: "",
         attendingDoctor: "",
         admissionStatus: "stable",
+        admissionDate: "",
         condition: "",
         emergencyContact: ""
       });
@@ -102,12 +114,13 @@ const patientData = {
 
   const handleClose = () => {
     if (!loading) {
-      setFormData({
+setFormData({
         name: "",
         age: "",
         roomNumber: "",
         attendingDoctor: "",
         admissionStatus: "stable",
+        admissionDate: "",
         condition: "",
         emergencyContact: ""
       });
@@ -233,7 +246,7 @@ const patientData = {
                   {errors.attendingDoctor && <p className="text-sm text-error-600 mt-1">{errors.attendingDoctor}</p>}
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+<div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Admission Status *
@@ -250,6 +263,22 @@ const patientData = {
                     <option value="discharged">Discharged</option>
                   </select>
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Admission Date *
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={formData.admissionDate}
+                    onChange={(e) => handleInputChange("admissionDate", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                    disabled={loading}
+                  />
+                  {errors.admissionDate && <p className="text-sm text-error-600 mt-1">{errors.admissionDate}</p>}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Primary Condition *
