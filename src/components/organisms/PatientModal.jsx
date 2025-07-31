@@ -53,8 +53,8 @@ const PatientModal = ({ patient, isOpen, onClose }) => {
                   {patient?.Name?.split(" ").map(n => n[0]).join("").toUpperCase() || "?"}
                 </span>
               </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">{patient.name}</h2>
+<div>
+                <h2 className="text-xl font-bold text-gray-900">{patient.Name}</h2>
                 <p className="text-sm text-gray-500">Patient ID: #{patient.Id}</p>
               </div>
             </div>
