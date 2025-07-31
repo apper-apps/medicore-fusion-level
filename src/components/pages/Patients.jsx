@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
 import PatientTable from "@/components/organisms/PatientTable";
 import PatientModal from "@/components/organisms/PatientModal";
+import PatientRegistrationModal from "@/components/organisms/PatientRegistrationModal";
 import PatientFilterPanel from "@/components/organisms/PatientFilterPanel";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
+import Button from "@/components/atoms/Button";
+import ApperIcon from "@/components/ApperIcon";
 import { getPatients } from "@/services/api/patientService";
+import { toast } from "react-toastify";
 
 const Patients = () => {
-const [patients, setPatients] = useState([]);
+  const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [filters, setFilters] = useState({
@@ -112,11 +117,24 @@ const loadPatients = async () => {
     setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
+const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedPatient(null);
   };
 
+  const handleOpenRegistration = () => {
+    setIsRegistrationOpen(true);
+  };
+
+  const handleCloseRegistration = () => {
+    setIsRegistrationOpen(false);
+  };
+
+  const handleRegistrationSuccess = () => {
+    setIsRegistrationOpen(false);
+    loadPatients(); // Refresh the patient list
+    toast.success("Patient registered successfully!");
+  };
   if (isLoading) {
     return <Loading message="Loading patients..." />;
   }
@@ -141,7 +159,7 @@ const loadPatients = async () => {
           description="There are no patients in the system yet. Register the first patient to get started."
           icon="Users"
           actionText="Register New Patient"
-          onAction={() => {/* Implement patient registration */}}
+onAction={handleOpenRegistration}
         />
       </div>
     );
@@ -150,13 +168,22 @@ const loadPatients = async () => {
 return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-          Patient Management
-        </h1>
-        <p className="text-gray-600 mt-2">
-          Manage patient records and medical information
-        </p>
+<div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+            Patient Management
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Manage patient records and medical information
+          </p>
+        </div>
+        <Button
+          onClick={handleOpenRegistration}
+          className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+        >
+          <ApperIcon name="Plus" size={16} />
+          New Patient
+        </Button>
       </div>
 
       {/* Filter Panel */}
@@ -174,11 +201,18 @@ return (
         isLoading={isLoading}
       />
 
-      {/* Patient Modal */}
+{/* Patient Modal */}
       <PatientModal
         patient={selectedPatient}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+      />
+
+      {/* Patient Registration Modal */}
+      <PatientRegistrationModal
+        isOpen={isRegistrationOpen}
+        onClose={handleCloseRegistration}
+        onSuccess={handleRegistrationSuccess}
       />
     </div>
   );
