@@ -1,17 +1,24 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
 import ApperIcon from "@/components/ApperIcon";
 
 const Appointments = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-          Appointment Management
-        </h1>
-        <p className="text-gray-600 mt-2">
-          Schedule and manage patient appointments efficiently
-        </p>
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+            Appointment Management
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Schedule and manage patient appointments efficiently
+          </p>
+        </div>
+        <Button className="ml-4">
+          <ApperIcon name="Calendar" className="h-4 w-4 mr-2" />
+          New Appointment
+        </Button>
       </div>
 
       {/* Coming Soon Card */}
