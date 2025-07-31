@@ -8,14 +8,16 @@ import { getMetrics } from "@/services/api/metricsService";
 import { getActivities } from "@/services/api/activityService";
 
 const Dashboard = () => {
-  const [metrics, setMetrics] = useState([]);
+const [metrics, setMetrics] = useState([]);
   const [activities, setActivities] = useState([]);
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(true);
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
   const [metricsError, setMetricsError] = useState("");
   const [activitiesError, setActivitiesError] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
+  const [updatedMetricIndex, setUpdatedMetricIndex] = useState(null);
 
-  const loadMetrics = async () => {
+const loadMetrics = async () => {
     try {
       setIsLoadingMetrics(true);
       setMetricsError("");
@@ -26,6 +28,27 @@ const Dashboard = () => {
       console.error("Error loading metrics:", error);
     } finally {
       setIsLoadingMetrics(false);
+    }
+  };
+
+  // Handle real-time metric updates
+  const handleMetricUpdate = (updatedMetrics, changedIndex) => {
+    setMetrics([...updatedMetrics]);
+    setUpdatedMetricIndex(changedIndex);
+    
+    // Clear the highlight after animation
+    setTimeout(() => {
+      setUpdatedMetricIndex(null);
+    }, 1000);
+  };
+
+  // Handle WebSocket connection status
+  const handleConnectionChange = (connected) => {
+    setIsConnected(connected);
+    if (!connected) {
+      setMetricsError("Connection lost. Attempting to reconnect...");
+    } else {
+      setMetricsError("");
     }
   };
 
@@ -43,9 +66,20 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     loadMetrics();
     loadActivities();
+
+    // Import WebSocket functions dynamically to avoid module loading issues
+    import('@/services/api/metricsService').then(({ connectWebSocket, disconnectWebSocket }) => {
+      // Establish WebSocket connection for live updates
+      const ws = connectWebSocket(handleMetricUpdate, handleConnectionChange);
+
+      // Cleanup on unmount
+      return () => {
+        disconnectWebSocket();
+      };
+    });
   }, []);
 
   if (isLoadingMetrics && isLoadingActivities) {
@@ -84,11 +118,17 @@ const Dashboard = () => {
             </div>
           ))
         ) : metricsError ? (
-          <div className="col-span-full">
+<div className="col-span-full flex items-center justify-between">
             <Error message={metricsError} onRetry={loadMetrics} />
+            {isConnected && (
+              <div className="flex items-center space-x-2 text-success-600 text-sm">
+                <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse"></div>
+                <span>Live Updates Active</span>
+              </div>
+            )}
           </div>
         ) : (
-          metrics.map((metric, index) => (
+metrics.map((metric, index) => (
             <MetricCard
               key={index}
               title={metric.label}
@@ -97,6 +137,9 @@ const Dashboard = () => {
               trend={metric.trend}
               icon={metric.icon}
               color={metric.color}
+              isLive={isConnected}
+              isUpdated={updatedMetricIndex === index}
+              lastUpdated={metric.lastUpdated}
             />
           ))
         )}
