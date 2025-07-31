@@ -59,13 +59,6 @@ const UserProfile = () => {
   );
 };
 const Header = ({ onMenuClick }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    // Implement global search functionality here
-  };
-
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 lg:pl-64">
       <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -78,12 +71,6 @@ const Header = ({ onMenuClick }) => {
           >
             <ApperIcon name="Menu" className="h-5 w-5" />
           </Button>
-          <div className="hidden sm:block w-80">
-            <SearchBar
-              placeholder="Search patients, staff, departments..."
-              onSearch={handleSearch}
-            />
-          </div>
         </div>
         
 <div className="flex items-center space-x-4">

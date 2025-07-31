@@ -2,20 +2,26 @@ import { useState, useEffect } from "react";
 import MetricCard from "@/components/molecules/MetricCard";
 import ActivityFeed from "@/components/organisms/ActivityFeed";
 import QuickActions from "@/components/organisms/QuickActions";
+import SearchBar from "@/components/molecules/SearchBar";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import { getMetrics } from "@/services/api/metricsService";
 import { getActivities } from "@/services/api/activityService";
-
 const Dashboard = () => {
-const [metrics, setMetrics] = useState([]);
+  const [metrics, setMetrics] = useState([]);
   const [activities, setActivities] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(true);
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
   const [metricsError, setMetricsError] = useState("");
   const [activitiesError, setActivitiesError] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [updatedMetricIndex, setUpdatedMetricIndex] = useState(null);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    // Implement dashboard search functionality here
+  };
 
 const loadMetrics = async () => {
     try {
@@ -97,7 +103,7 @@ useEffect(() => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+{/* Header */}
       <div>
         <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
           Hospital Dashboard
@@ -107,6 +113,13 @@ useEffect(() => {
         </p>
       </div>
 
+      {/* Search Section */}
+      <div className="w-full max-w-md">
+        <SearchBar
+          placeholder="Search patients, staff, departments..."
+          onSearch={handleSearch}
+        />
+      </div>
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {isLoadingMetrics ? (
