@@ -15,8 +15,6 @@ const [formData, setFormData] = useState({
     attendingDoctor: "",
     admissionStatus: "stable",
     admissionDate: "",
-    admissionFrom: "",
-    admissionTo: "",
     condition: "",
     emergencyContact: ""
   });
@@ -50,44 +48,7 @@ const validateForm = () => {
     }
     
     // Validate admission from and to dates
-    if (formData.admissionFrom) {
-      const admissionFromDate = new Date(formData.admissionFrom);
-      const now = new Date();
-      if (admissionFromDate > now) {
-        newErrors.admissionFrom = "Admission from date cannot be in the future";
-      }
-    }
-    
-    if (formData.admissionTo) {
-      const admissionToDate = new Date(formData.admissionTo);
-      const now = new Date();
-      if (admissionToDate > now) {
-        newErrors.admissionTo = "Admission to date cannot be in the future";
-      }
-    }
-    
-    // Check if admission from is before admission to
-    if (formData.admissionFrom && formData.admissionTo) {
-      const fromDate = new Date(formData.admissionFrom);
-      const toDate = new Date(formData.admissionTo);
-      if (fromDate >= toDate) {
-        newErrors.admissionTo = "Admission to date must be after admission from date";
-      }
-}
-    
-    // Validate that admission date and admission from date are the same
-    if (formData.admissionDate && formData.admissionFrom) {
-      const admissionDate = new Date(formData.admissionDate);
-      const admissionFromDate = new Date(formData.admissionFrom);
-      
-      // Compare dates by converting to ISO date strings (YYYY-MM-DD)
-      const admissionDateStr = admissionDate.toISOString().split('T')[0];
-      const admissionFromDateStr = admissionFromDate.toISOString().split('T')[0];
-      
-      if (admissionDateStr !== admissionFromDateStr) {
-        newErrors.admissionFrom = "Admission from date must be the same as admission date";
-      }
-    }
+// Admission date validation removed - simplified to single date field
     
     if (!formData.condition.trim()) newErrors.condition = "Condition is required";
     if (!formData.emergencyContact.trim()) newErrors.emergencyContact = "Emergency contact is required";
@@ -113,8 +74,6 @@ const patientData = {
         attendingDoctor: formData.attendingDoctor,
         admissionStatus: formData.admissionStatus,
         admissionDate: formData.admissionDate,
-        admissionFrom: formData.admissionFrom,
-        admissionTo: formData.admissionTo,
         condition: formData.condition,
         emergencyContact: formData.emergencyContact
       };
@@ -143,8 +102,6 @@ setFormData({
         attendingDoctor: "",
         admissionStatus: "stable",
         admissionDate: "",
-        admissionFrom: "",
-        admissionTo: "",
         condition: "",
         emergencyContact: ""
       });
@@ -168,8 +125,6 @@ setFormData({
         attendingDoctor: "",
         admissionStatus: "stable",
         admissionDate: "",
-        admissionFrom: "",
-        admissionTo: "",
         condition: "",
         emergencyContact: ""
       });
@@ -327,34 +282,7 @@ setFormData({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Admission From
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={formData.admissionFrom}
-                    onChange={(e) => handleInputChange("admissionFrom", e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
-                    disabled={loading}
-                  />
-                  {errors.admissionFrom && <p className="text-sm text-error-600 mt-1">{errors.admissionFrom}</p>}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Admission To
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={formData.admissionTo}
-                    onChange={(e) => handleInputChange("admissionTo", e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
-                    disabled={loading}
-                  />
-                  {errors.admissionTo && <p className="text-sm text-error-600 mt-1">{errors.admissionTo}</p>}
-                </div>
-              </div>
+{/* Admission date range fields removed - simplified to single admission date */}
 
               <div className="grid grid-cols-1 gap-4">
                 <div>

@@ -14,7 +14,7 @@ const TABLE_NAME = 'patient';
 // Define updateable fields based on schema
 const UPDATEABLE_FIELDS = [
   'Name', 'Tags', 'Owner', 'age', 'roomNumber', 'attendingDoctor', 
-  'admissionStatus', 'admissionDate', 'admissionFrom', 'admissionTo', 'condition', 'emergencyContact'
+  'admissionStatus', 'admissionDate', 'condition', 'emergencyContact'
 ];
 
 export const getPatients = async () => {
@@ -35,7 +35,6 @@ fields: [
         { field: { Name: "attendingDoctor" } },
         { field: { Name: "admissionStatus" } },
         { field: { Name: "admissionDate" } },
-        { field: { Name: "admissionFrom" } },
         { field: { Name: "admissionTo" } },
         { field: { Name: "condition" } },
         { field: { Name: "emergencyContact" } }
@@ -85,7 +84,6 @@ fields: [
         { field: { Name: "attendingDoctor" } },
         { field: { Name: "admissionStatus" } },
         { field: { Name: "admissionDate" } },
-        { field: { Name: "admissionFrom" } },
         { field: { Name: "admissionTo" } },
         { field: { Name: "condition" } },
         { field: { Name: "emergencyContact" } }
@@ -123,8 +121,8 @@ UPDATEABLE_FIELDS.forEach(field => {
         
         // Format data according to field types
         if (field === 'age' && value) {
-          value = parseInt(value);
-        } else if ((field === 'admissionDate' || field === 'admissionFrom' || field === 'admissionTo') && value) {
+value = parseInt(value);
+        } else if ((field === 'admissionDate' || field === 'admissionTo') && value) {
           value = new Date(value).toISOString();
         } else if (field === 'Owner' && value) {
           value = parseInt(value?.Id || value);
@@ -133,18 +131,6 @@ UPDATEABLE_FIELDS.forEach(field => {
         filteredData[field] = value;
       }
 });
-    
-    // Validate that admission date and admission from date are the same
-    if (filteredData.admissionDate && filteredData.admissionFrom) {
-      const admissionDate = new Date(filteredData.admissionDate);
-      const admissionFromDate = new Date(filteredData.admissionFrom);
-      
-      if (admissionDate.toISOString() !== admissionFromDate.toISOString()) {
-        toast.error("Admission date and admission from date must be the same");
-        return null;
-      }
-    }
-    
     const params = {
       records: [filteredData]
     };
@@ -194,7 +180,7 @@ export const updatePatient = async (id, updates) => {
     const apperClient = getApperClient();
     
 // Filter to only include updateable fields and format data
-    const filteredData = { Id: parseInt(id) };
+const filteredData = { Id: parseInt(id) };
     UPDATEABLE_FIELDS.forEach(field => {
       if (updates[field] !== undefined) {
         let value = updates[field];
@@ -202,7 +188,7 @@ export const updatePatient = async (id, updates) => {
         // Format data according to field types
         if (field === 'age' && value) {
           value = parseInt(value);
-        } else if ((field === 'admissionDate' || field === 'admissionFrom' || field === 'admissionTo') && value) {
+        } else if ((field === 'admissionDate' || field === 'admissionTo') && value) {
           value = new Date(value).toISOString();
         } else if (field === 'Owner' && value) {
           value = parseInt(value?.Id || value);
@@ -211,18 +197,6 @@ export const updatePatient = async (id, updates) => {
         filteredData[field] = value;
       }
 });
-    
-    // Validate that admission date and admission from date are the same
-    if (filteredData.admissionDate && filteredData.admissionFrom) {
-      const admissionDate = new Date(filteredData.admissionDate);
-      const admissionFromDate = new Date(filteredData.admissionFrom);
-      
-      if (admissionDate.toISOString() !== admissionFromDate.toISOString()) {
-        toast.error("Admission date and admission from date must be the same");
-        return null;
-      }
-    }
-    
     const params = {
       records: [filteredData]
     };
