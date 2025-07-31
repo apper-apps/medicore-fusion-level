@@ -1,0 +1,66 @@
+[
+  {
+    "Id": 1,
+    "type": "admission",
+    "timestamp": "2024-01-27T09:15:00Z",
+    "description": "New patient admission: Jennifer Lee (Room A-112)",
+    "severity": "low",
+    "relatedPatientId": "7"
+  },
+  {
+    "Id": 2,
+    "type": "critical",
+    "timestamp": "2024-01-27T08:45:00Z",
+    "description": "Critical alert: Michael Anderson requires immediate attention",
+    "severity": "critical",
+    "relatedPatientId": "8"
+  },
+  {
+    "Id": 3,
+    "type": "discharge",
+    "timestamp": "2024-01-27T08:30:00Z",
+    "description": "Patient discharged: Maria Garcia completed treatment",
+    "severity": "low",
+    "relatedPatientId": "5"
+  },
+  {
+    "Id": 4,
+    "type": "surgery",
+    "timestamp": "2024-01-27T07:00:00Z",
+    "description": "Surgery completed: John Wilson orthopedic procedure successful",
+    "severity": "medium",
+    "relatedPatientId": "6"
+  },
+  {
+    "Id": 5,
+    "type": "medication",
+    "timestamp": "2024-01-27T06:30:00Z",
+    "description": "Medication administered: Robert Martinez cardiac medication",
+    "severity": "high",
+    "relatedPatientId": "2"
+  },
+  {
+    "Id": 6,
+    "type": "admission",
+    "timestamp": "2024-01-26T22:15:00Z",
+    "description": "Emergency admission: David Brown appendicitis case",
+    "severity": "medium",
+    "relatedPatientId": "4"
+  },
+  {
+    "Id": 7,
+    "type": "critical",
+    "timestamp": "2024-01-26T20:45:00Z",
+    "description": "Code blue resolved: Lisa Thompson stabilized",
+    "severity": "critical",
+    "relatedPatientId": "3"
+  },
+  {
+    "Id": 8,
+    "type": "medication",
+    "timestamp": "2024-01-26T18:30:00Z",
+    "description": "Medication review: Sarah Johnson post-op care updated",
+    "severity": "low",
+    "relatedPatientId": "1"
+  }
+]

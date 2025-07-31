@@ -1,0 +1,90 @@
+[
+  {
+    "Id": 1,
+    "name": "Sarah Johnson",
+    "age": 45,
+    "roomNumber": "A-101",
+    "attendingDoctor": "Dr. Michael Chen",
+    "admissionStatus": "stable",
+    "admissionDate": "2024-01-15T08:30:00Z",
+    "condition": "Post-surgical recovery",
+    "emergencyContact": "+1 (555) 123-4567"
+  },
+  {
+    "Id": 2,
+    "name": "Robert Martinez",
+    "age": 62,
+    "roomNumber": "B-205",
+    "attendingDoctor": "Dr. Emily Roberts",
+    "admissionStatus": "critical",
+    "admissionDate": "2024-01-18T14:20:00Z",
+    "condition": "Cardiac monitoring",
+    "emergencyContact": "+1 (555) 987-6543"
+  },
+  {
+    "Id": 3,
+    "name": "Lisa Thompson",
+    "age": 34,
+    "roomNumber": "C-303",
+    "attendingDoctor": "Dr. James Wilson",
+    "admissionStatus": "observation",
+    "admissionDate": "2024-01-20T10:15:00Z",
+    "condition": "Pneumonia treatment",
+    "emergencyContact": "+1 (555) 456-7890"
+  },
+  {
+    "Id": 4,
+    "name": "David Brown",
+    "age": 28,
+    "roomNumber": "A-108",
+    "attendingDoctor": "Dr. Sarah Davis",
+    "admissionStatus": "stable",
+    "admissionDate": "2024-01-22T16:45:00Z",
+    "condition": "Appendectomy recovery",
+    "emergencyContact": "+1 (555) 234-5678"
+  },
+  {
+    "Id": 5,
+    "name": "Maria Garcia",
+    "age": 51,
+    "roomNumber": "B-210",
+    "attendingDoctor": "Dr. Michael Chen",
+    "admissionStatus": "discharged",
+    "admissionDate": "2024-01-12T09:00:00Z",
+    "condition": "Diabetes management",
+    "emergencyContact": "+1 (555) 345-6789"
+  },
+  {
+    "Id": 6,
+    "name": "John Wilson",
+    "age": 37,
+    "roomNumber": "C-315",
+    "attendingDoctor": "Dr. Emily Roberts",
+    "admissionStatus": "stable",
+    "admissionDate": "2024-01-25T11:30:00Z",
+    "condition": "Orthopedic surgery",
+    "emergencyContact": "+1 (555) 567-8901"
+  },
+  {
+    "Id": 7,
+    "name": "Jennifer Lee",
+    "age": 29,
+    "roomNumber": "A-112",
+    "attendingDoctor": "Dr. James Wilson",
+    "admissionStatus": "observation",
+    "admissionDate": "2024-01-26T13:20:00Z",
+    "condition": "Maternity care",
+    "emergencyContact": "+1 (555) 678-9012"
+  },
+  {
+    "Id": 8,
+    "name": "Michael Anderson",
+    "age": 58,
+    "roomNumber": "B-218",
+    "attendingDoctor": "Dr. Sarah Davis",
+    "admissionStatus": "critical",
+    "admissionDate": "2024-01-24T07:45:00Z",
+    "condition": "Stroke rehabilitation",
+    "emergencyContact": "+1 (555) 789-0123"
+  }
+]

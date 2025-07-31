@@ -1,0 +1,38 @@
+[
+  {
+    "label": "Total Patients",
+    "value": 247,
+    "unit": "",
+    "trend": "up",
+    "icon": "Users",
+    "color": "primary",
+    "lastUpdated": "2024-01-27T10:30:00Z"
+  },
+  {
+    "label": "Daily Appointments",
+    "value": 42,
+    "unit": "",
+    "trend": "up",
+    "icon": "Calendar",
+    "color": "secondary",
+    "lastUpdated": "2024-01-27T10:30:00Z"
+  },
+  {
+    "label": "Available Beds",
+    "value": 18,
+    "unit": "",
+    "trend": "down",
+    "icon": "Bed",
+    "color": "warning",
+    "lastUpdated": "2024-01-27T10:30:00Z"
+  },
+  {
+    "label": "Staff on Duty",
+    "value": 89,
+    "unit": "",
+    "trend": "up",
+    "icon": "UserCheck",
+    "color": "success",
+    "lastUpdated": "2024-01-27T10:30:00Z"
+  }
+]
