@@ -1,16 +1,23 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { connectWebSocket, disconnectWebSocket, getMetrics } from "@/services/api/metricsService";
+import { getPatients } from "@/services/api/patientService";
+import { getActivities } from "@/services/api/activityService";
+import ApperIcon from "@/components/ApperIcon";
+import SearchBar from "@/components/molecules/SearchBar";
 import MetricCard from "@/components/molecules/MetricCard";
 import ActivityFeed from "@/components/organisms/ActivityFeed";
+import PatientTable from "@/components/organisms/PatientTable";
 import QuickActions from "@/components/organisms/QuickActions";
-import SearchBar from "@/components/molecules/SearchBar";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
-import { getMetrics } from "@/services/api/metricsService";
-import { getActivities } from "@/services/api/activityService";
 const Dashboard = () => {
-  const [metrics, setMetrics] = useState([]);
+const [metrics, setMetrics] = useState([]);
   const [activities, setActivities] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(true);
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
   const [metricsError, setMetricsError] = useState("");
@@ -18,9 +25,48 @@ const Dashboard = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [updatedMetricIndex, setUpdatedMetricIndex] = useState(null);
 
-  const handleSearch = (query) => {
+const handleSearch = async (query) => {
+    if (!query.trim()) {
+      handleCancel();
+      return;
+    }
+
     setSearchQuery(query);
-    // Implement dashboard search functionality here
+    setIsSearching(true);
+    setSearchError("");
+    setShowSearchResults(true);
+
+    try {
+      // Import the patient service
+      const { getPatients } = await import('@/services/api/patientService');
+      
+      // Get all patients first, then filter locally for better performance
+      // In a production app, you'd want server-side filtering
+      const allPatients = await getPatients();
+      
+      // Filter patients based on search query
+      const filteredPatients = allPatients.filter(patient => 
+        patient.Name?.toLowerCase().includes(query.toLowerCase()) ||
+        patient.attendingDoctor?.toLowerCase().includes(query.toLowerCase()) ||
+        patient.Id.toString().includes(query) ||
+        patient.roomNumber?.toLowerCase().includes(query.toLowerCase()) ||
+        patient.condition?.toLowerCase().includes(query.toLowerCase())
+      );
+
+      setSearchResults(filteredPatients);
+    } catch (error) {
+      setSearchError("Failed to search patients");
+      console.error("Error searching patients:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setSearchQuery("");
+    setSearchResults([]);
+    setShowSearchResults(false);
+    setSearchError("");
   };
 
 const loadMetrics = async () => {
@@ -114,12 +160,52 @@ useEffect(() => {
       </div>
 
       {/* Search Section */}
-      <div className="w-full max-w-md">
+<div className="w-full max-w-md">
         <SearchBar
-          placeholder="Search patients, staff, departments..."
+          placeholder="Search patients by name, doctor, room..."
           onSearch={handleSearch}
+          onCancel={handleCancel}
+          showButtons={true}
         />
       </div>
+{/* Patient Search Results */}
+      {showSearchResults && (
+        <div className="mb-8">
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Search Results for "{searchQuery}"
+              </h2>
+              <span className="text-sm text-gray-500">
+                {isSearching ? "Searching..." : `${searchResults.length} patient(s) found`}
+              </span>
+            </div>
+            
+            {isSearching ? (
+              <div className="flex items-center justify-center py-8">
+                <Loading />
+              </div>
+            ) : searchError ? (
+              <Error message={searchError} onRetry={() => handleSearch(searchQuery)} />
+            ) : searchResults.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <ApperIcon name="Search" className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                <p>No patients found matching your search criteria.</p>
+              </div>
+            ) : (
+              <PatientTable 
+                patients={searchResults}
+                onPatientClick={(patient) => {
+                  // Handle patient click - could open modal or navigate
+                  console.log("Patient clicked:", patient);
+                }}
+                isLoading={false}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {isLoadingMetrics ? (
@@ -131,7 +217,7 @@ useEffect(() => {
             </div>
           ))
         ) : metricsError ? (
-<div className="col-span-full flex items-center justify-between">
+          <div className="col-span-full flex items-center justify-between">
             <Error message={metricsError} onRetry={loadMetrics} />
             {isConnected && (
               <div className="flex items-center space-x-2 text-success-600 text-sm">
@@ -141,7 +227,7 @@ useEffect(() => {
             )}
           </div>
         ) : (
-metrics.map((metric, index) => (
+          metrics.map((metric, index) => (
             <MetricCard
               key={index}
               title={metric.label}
@@ -157,7 +243,6 @@ metrics.map((metric, index) => (
           ))
         )}
       </div>
-
       {/* Quick Actions */}
       <QuickActions />
 
