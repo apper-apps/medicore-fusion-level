@@ -132,7 +132,18 @@ UPDATEABLE_FIELDS.forEach(field => {
         
         filteredData[field] = value;
       }
-    });
+});
+    
+    // Validate that admission date and admission from date are the same
+    if (filteredData.admissionDate && filteredData.admissionFrom) {
+      const admissionDate = new Date(filteredData.admissionDate);
+      const admissionFromDate = new Date(filteredData.admissionFrom);
+      
+      if (admissionDate.toISOString() !== admissionFromDate.toISOString()) {
+        toast.error("Admission date and admission from date must be the same");
+        return null;
+      }
+    }
     
     const params = {
       records: [filteredData]
@@ -199,7 +210,18 @@ export const updatePatient = async (id, updates) => {
         
         filteredData[field] = value;
       }
-    });
+});
+    
+    // Validate that admission date and admission from date are the same
+    if (filteredData.admissionDate && filteredData.admissionFrom) {
+      const admissionDate = new Date(filteredData.admissionDate);
+      const admissionFromDate = new Date(filteredData.admissionFrom);
+      
+      if (admissionDate.toISOString() !== admissionFromDate.toISOString()) {
+        toast.error("Admission date and admission from date must be the same");
+        return null;
+      }
+    }
     
     const params = {
       records: [filteredData]

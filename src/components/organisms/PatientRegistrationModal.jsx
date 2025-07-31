@@ -73,6 +73,20 @@ const validateForm = () => {
       if (fromDate >= toDate) {
         newErrors.admissionTo = "Admission to date must be after admission from date";
       }
+}
+    
+    // Validate that admission date and admission from date are the same
+    if (formData.admissionDate && formData.admissionFrom) {
+      const admissionDate = new Date(formData.admissionDate);
+      const admissionFromDate = new Date(formData.admissionFrom);
+      
+      // Compare dates by converting to ISO date strings (YYYY-MM-DD)
+      const admissionDateStr = admissionDate.toISOString().split('T')[0];
+      const admissionFromDateStr = admissionFromDate.toISOString().split('T')[0];
+      
+      if (admissionDateStr !== admissionFromDateStr) {
+        newErrors.admissionFrom = "Admission from date must be the same as admission date";
+      }
     }
     
     if (!formData.condition.trim()) newErrors.condition = "Condition is required";
