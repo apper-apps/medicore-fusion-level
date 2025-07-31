@@ -12,9 +12,10 @@ const QuickActions = () => {
     setIsPatientModalOpen(true);
   };
 
-  const handlePatientRegistrationSuccess = (newPatient) => {
+const handlePatientRegistrationSuccess = (newPatient) => {
+    setIsPatientModalOpen(false);
+    toast.success(`Patient ${newPatient.name} registered successfully!`);
     // Could trigger a refresh of patient data in parent components if needed
-    console.log("New patient registered:", newPatient);
   };
 
   const handleEmergencyAlert = () => {
@@ -69,8 +70,13 @@ const QuickActions = () => {
               variant={action.variant}
             />
           ))}
-        </div>
+</div>
       </CardContent>
+      <PatientRegistrationModal
+        isOpen={isPatientModalOpen}
+        onClose={() => setIsPatientModalOpen(false)}
+        onSuccess={handlePatientRegistrationSuccess}
+      />
     </Card>
   );
 };
