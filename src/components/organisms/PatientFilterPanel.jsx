@@ -119,31 +119,6 @@ const PatientFilterPanel = ({
             />
           </div>
 
-          {/* Date Range - From */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Admission From
-            </label>
-            <Input
-              type="date"
-              value={filters.dateFrom || ""}
-              onChange={(e) => handleFilterChange("dateFrom", e.target.value)}
-              className="w-full"
-            />
-          </div>
-
-          {/* Date Range - To */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Admission To
-            </label>
-            <Input
-              type="date"
-              value={filters.dateTo || ""}
-              onChange={(e) => handleFilterChange("dateTo", e.target.value)}
-              className="w-full"
-            />
-          </div>
         </div>
 
         {/* Filter Actions */}

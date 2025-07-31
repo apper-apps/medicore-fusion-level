@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { getPatients } from "@/services/api/patientService";
+import ApperIcon from "@/components/ApperIcon";
 import PatientTable from "@/components/organisms/PatientTable";
 import PatientModal from "@/components/organisms/PatientModal";
-import PatientRegistrationModal from "@/components/organisms/PatientRegistrationModal";
 import PatientFilterPanel from "@/components/organisms/PatientFilterPanel";
+import PatientRegistrationModal from "@/components/organisms/PatientRegistrationModal";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import Button from "@/components/atoms/Button";
-import ApperIcon from "@/components/ApperIcon";
-import { getPatients } from "@/services/api/patientService";
-import { toast } from "react-toastify";
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
@@ -22,8 +22,6 @@ const Patients = () => {
 const [filters, setFilters] = useState({
     department: "",
     status: "",
-    dateFrom: "",
-    dateTo: "",
     patientName: "",
     admissionDate: ""
   });
@@ -67,26 +65,7 @@ const applyFilters = () => {
         patient.admissionStatus === filters.status
       );
     }
-
-    // Date range filter
-    if (filters.dateFrom) {
-      const fromDate = new Date(filters.dateFrom);
-      filtered = filtered.filter(patient => {
-        const admissionDate = new Date(patient.admissionDate);
-        return admissionDate >= fromDate;
-      });
-    }
-
-    if (filters.dateTo) {
-      const toDate = new Date(filters.dateTo);
-      toDate.setHours(23, 59, 59, 999); // End of day
-      filtered = filtered.filter(patient => {
-        const admissionDate = new Date(patient.admissionDate);
-        return admissionDate <= toDate;
-      });
-    }
-
-    // Admission date exact filter
+// Admission date exact filter
     if (filters.admissionDate) {
       filtered = filtered.filter(patient => {
         const patientAdmissionDate = new Date(patient.admissionDate);
@@ -117,8 +96,6 @@ const handleClearFilters = () => {
     setFilters({
       department: "",
       status: "",
-      dateFrom: "",
-      dateTo: "",
       patientName: "",
       admissionDate: ""
     });
