@@ -6,7 +6,7 @@ import ApperIcon from "@/components/ApperIcon";
 
 const PatientTable = ({ patients, onPatientClick, isLoading }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortField, setSortField] = useState("name");
+const [sortField, setSortField] = useState("Name");
   const [sortDirection, setSortDirection] = useState("asc");
 
   const handleSearch = (query) => {
