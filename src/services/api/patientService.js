@@ -35,7 +35,6 @@ fields: [
         { field: { Name: "attendingDoctor" } },
         { field: { Name: "admissionStatus" } },
         { field: { Name: "admissionDate" } },
-        { field: { Name: "admissionTo" } },
         { field: { Name: "condition" } },
         { field: { Name: "emergencyContact" } }
       ],
@@ -84,7 +83,6 @@ fields: [
         { field: { Name: "attendingDoctor" } },
         { field: { Name: "admissionStatus" } },
         { field: { Name: "admissionDate" } },
-        { field: { Name: "admissionTo" } },
         { field: { Name: "condition" } },
         { field: { Name: "emergencyContact" } }
       ]
@@ -122,7 +120,7 @@ UPDATEABLE_FIELDS.forEach(field => {
         // Format data according to field types
         if (field === 'age' && value) {
 value = parseInt(value);
-        } else if ((field === 'admissionDate' || field === 'admissionTo') && value) {
+        } else if (field === 'admissionDate' && value) {
           value = new Date(value).toISOString();
         } else if (field === 'Owner' && value) {
           value = parseInt(value?.Id || value);
@@ -187,8 +185,8 @@ const filteredData = { Id: parseInt(id) };
         
         // Format data according to field types
         if (field === 'age' && value) {
-          value = parseInt(value);
-        } else if ((field === 'admissionDate' || field === 'admissionTo') && value) {
+value = parseInt(value);
+        } else if (field === 'admissionDate' && value) {
           value = new Date(value).toISOString();
         } else if (field === 'Owner' && value) {
           value = parseInt(value?.Id || value);
