@@ -14,7 +14,7 @@ const TABLE_NAME = 'patient';
 // Define updateable fields based on schema
 const UPDATEABLE_FIELDS = [
   'Name', 'Tags', 'Owner', 'age', 'roomNumber', 'attendingDoctor', 
-  'admissionStatus', 'admissionDate', 'condition', 'emergencyContact'
+  'admissionStatus', 'admissionDate', 'admissionFrom', 'admissionTo', 'condition', 'emergencyContact'
 ];
 
 export const getPatients = async () => {
@@ -22,7 +22,7 @@ export const getPatients = async () => {
     const apperClient = getApperClient();
     
     const params = {
-      fields: [
+fields: [
         { field: { Name: "Name" } },
         { field: { Name: "Tags" } },
         { field: { Name: "Owner" } },
@@ -35,6 +35,8 @@ export const getPatients = async () => {
         { field: { Name: "attendingDoctor" } },
         { field: { Name: "admissionStatus" } },
         { field: { Name: "admissionDate" } },
+        { field: { Name: "admissionFrom" } },
+        { field: { Name: "admissionTo" } },
         { field: { Name: "condition" } },
         { field: { Name: "emergencyContact" } }
       ],
@@ -70,7 +72,7 @@ export const getPatientById = async (id) => {
     const apperClient = getApperClient();
     
     const params = {
-      fields: [
+fields: [
         { field: { Name: "Name" } },
         { field: { Name: "Tags" } },
         { field: { Name: "Owner" } },
@@ -83,6 +85,8 @@ export const getPatientById = async (id) => {
         { field: { Name: "attendingDoctor" } },
         { field: { Name: "admissionStatus" } },
         { field: { Name: "admissionDate" } },
+        { field: { Name: "admissionFrom" } },
+        { field: { Name: "admissionTo" } },
         { field: { Name: "condition" } },
         { field: { Name: "emergencyContact" } }
       ]
@@ -113,14 +117,14 @@ export const createPatient = async (patientData) => {
     
     // Filter to only include updateable fields and format data
     const filteredData = {};
-    UPDATEABLE_FIELDS.forEach(field => {
+UPDATEABLE_FIELDS.forEach(field => {
       if (patientData[field] !== undefined) {
         let value = patientData[field];
         
         // Format data according to field types
         if (field === 'age' && value) {
           value = parseInt(value);
-        } else if (field === 'admissionDate' && value) {
+        } else if ((field === 'admissionDate' || field === 'admissionFrom' || field === 'admissionTo') && value) {
           value = new Date(value).toISOString();
         } else if (field === 'Owner' && value) {
           value = parseInt(value?.Id || value);
@@ -178,7 +182,7 @@ export const updatePatient = async (id, updates) => {
   try {
     const apperClient = getApperClient();
     
-    // Filter to only include updateable fields and format data
+// Filter to only include updateable fields and format data
     const filteredData = { Id: parseInt(id) };
     UPDATEABLE_FIELDS.forEach(field => {
       if (updates[field] !== undefined) {
@@ -187,7 +191,7 @@ export const updatePatient = async (id, updates) => {
         // Format data according to field types
         if (field === 'age' && value) {
           value = parseInt(value);
-        } else if (field === 'admissionDate' && value) {
+        } else if ((field === 'admissionDate' || field === 'admissionFrom' || field === 'admissionTo') && value) {
           value = new Date(value).toISOString();
         } else if (field === 'Owner' && value) {
           value = parseInt(value?.Id || value);
