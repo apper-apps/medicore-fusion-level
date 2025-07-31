@@ -8,10 +8,11 @@ import Input from "@/components/atoms/Input";
 import Button from "@/components/atoms/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
 const Staff = () => {
-  const [staff, setStaff] = useState([]);
+const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [editingStaff, setEditingStaff] = useState(null);
   const [formData, setFormData] = useState({
     Name: '',
     role: '',
@@ -19,7 +20,6 @@ const Staff = () => {
     contactInformation: ''
   });
   const [submitting, setSubmitting] = useState(false);
-
   // Load staff data on component mount
   useEffect(() => {
     loadStaff();
@@ -49,8 +49,9 @@ const Staff = () => {
     setShowModal(true);
   };
 
-  const handleCloseModal = () => {
+const handleCloseModal = () => {
     setShowModal(false);
+    setEditingStaff(null);
     setFormData({
       Name: '',
       role: '',
@@ -59,6 +60,16 @@ const Staff = () => {
     });
   };
 
+  const handleEditStaff = (staffMember) => {
+    setEditingStaff(staffMember);
+    setFormData({
+      Name: staffMember.Name || '',
+      role: staffMember.role || '',
+      department: staffMember.department || '',
+      contactInformation: staffMember.contactInformation || ''
+    });
+    setShowModal(true);
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -67,7 +78,7 @@ const Staff = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.Name.trim()) {
@@ -77,12 +88,21 @@ const Staff = () => {
 
     try {
       setSubmitting(true);
-      await staffService.create(formData);
-      toast.success('Staff member added successfully');
+      
+      if (editingStaff) {
+        // Update existing staff member
+        await staffService.update(editingStaff.Id, formData);
+        toast.success('Staff member updated successfully');
+      } else {
+        // Create new staff member
+        await staffService.create(formData);
+        toast.success('Staff member added successfully');
+      }
+      
       handleCloseModal();
       loadStaff(); // Refresh the staff list
     } catch (err) {
-      toast.error(err.message || 'Failed to add staff member');
+      toast.error(err.message || `Failed to ${editingStaff ? 'update' : 'add'} staff member`);
     } finally {
       setSubmitting(false);
     }
@@ -172,10 +192,10 @@ const Staff = () => {
                       </td>
                       <td>
                         <div className="flex items-center gap-2">
-                          <Button
+<Button
                             size="sm"
                             variant="outline"
-                            onClick={() => toast.info('Edit functionality coming soon')}
+                            onClick={() => handleEditStaff(member)}
                           >
                             <ApperIcon name="Edit" size={14} />
                           </Button>
@@ -199,11 +219,13 @@ const Staff = () => {
       </Card>
 
       {/* Add Staff Modal */}
-      {showModal && (
+{showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
             <div className="flex justify-between items-center p-6 border-b">
-              <h2 className="text-xl font-semibold">Add New Staff Member</h2>
+              <h2 className="text-xl font-semibold">
+                {editingStaff ? 'Edit Staff Member' : 'Add New Staff Member'}
+              </h2>
               <Button
                 variant="ghost"
                 size="sm"
@@ -289,12 +311,12 @@ const Staff = () => {
                   {submitting ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Adding...
+                      {editingStaff ? 'Updating...' : 'Adding...'}
                     </>
                   ) : (
                     <>
-                      <ApperIcon name="Plus" size={16} className="mr-2" />
-                      Add Staff Member
+                      <ApperIcon name={editingStaff ? "Save" : "Plus"} size={16} className="mr-2" />
+                      {editingStaff ? 'Update Staff Member' : 'Add Staff Member'}
                     </>
                   )}
                 </Button>
