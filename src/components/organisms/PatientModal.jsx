@@ -48,9 +48,9 @@ const PatientModal = ({ patient, isOpen, onClose }) => {
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center">
+<div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center">
                 <span className="text-white font-medium text-lg">
-                  {patient.name.split(" ").map(n => n[0]).join("").toUpperCase()}
+                  {patient?.Name?.split(" ").map(n => n[0]).join("").toUpperCase() || "?"}
                 </span>
               </div>
               <div>
