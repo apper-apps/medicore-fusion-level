@@ -4,6 +4,7 @@ import Input from "@/components/atoms/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
 import ApperIcon from "@/components/ApperIcon";
 import { createPatient } from "@/services/api/patientService";
+import { createActivity } from "@/services/api/activityService";
 import { toast } from "react-toastify";
 
 const PatientRegistrationModal = ({ isOpen, onClose, onSuccess }) => {
@@ -57,8 +58,21 @@ const PatientRegistrationModal = ({ isOpen, onClose, onSuccess }) => {
         age: parseInt(formData.age)
       };
       
-      const newPatient = await createPatient(patientData);
-      toast.success(`Patient ${newPatient.name} registered successfully!`);
+const newPatient = await createPatient(patientData);
+      
+      // Create corresponding activity record for the patient admission
+      if (newPatient && newPatient.Id) {
+        await createActivity({
+          Name: `Patient Registration - ${newPatient.Name || formData.name}`,
+          type: "admission",
+          description: `New patient ${newPatient.Name || formData.name} registered in room ${formData.roomNumber} under Dr. ${formData.attendingDoctor}`,
+          timestamp: new Date().toISOString(),
+          severity: "medium",
+          relatedPatientId: newPatient.Id
+        });
+      }
+      
+      toast.success(`Patient ${newPatient.Name || formData.name} registered successfully!`);
       
       // Reset form
       setFormData({
