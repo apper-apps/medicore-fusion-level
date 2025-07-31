@@ -1,11 +1,20 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
 import QuickActionButton from "@/components/molecules/QuickActionButton";
 import ApperIcon from "@/components/ApperIcon";
+import PatientRegistrationModal from "@/components/organisms/PatientRegistrationModal";
 import { toast } from "react-toastify";
 
 const QuickActions = () => {
+  const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
+
   const handleNewPatient = () => {
-    toast.info("New Patient Registration feature coming soon!");
+    setIsPatientModalOpen(true);
+  };
+
+  const handlePatientRegistrationSuccess = (newPatient) => {
+    // Could trigger a refresh of patient data in parent components if needed
+    console.log("New patient registered:", newPatient);
   };
 
   const handleEmergencyAlert = () => {
