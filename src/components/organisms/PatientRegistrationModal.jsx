@@ -53,12 +53,17 @@ const PatientRegistrationModal = ({ isOpen, onClose, onSuccess }) => {
 
     setLoading(true);
     try {
-      const patientData = {
-        ...formData,
-        age: parseInt(formData.age)
+const patientData = {
+        Name: formData.name,
+        age: parseInt(formData.age),
+        roomNumber: formData.roomNumber,
+        attendingDoctor: formData.attendingDoctor,
+        admissionStatus: formData.admissionStatus,
+        condition: formData.condition,
+        emergencyContact: formData.emergencyContact
       };
       
-const newPatient = await createPatient(patientData);
+      const newPatient = await createPatient(patientData);
       
       // Create corresponding activity record for the patient admission
       if (newPatient && newPatient.Id) {
